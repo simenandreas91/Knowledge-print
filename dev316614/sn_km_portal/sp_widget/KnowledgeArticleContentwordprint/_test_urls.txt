@@ -1,0 +1,4 @@
+https://dev316614.service-now.com/$sp.do?id=sp-preview&sys_id=e571ec5e9793d510bcbbbbc3f153af9d
+https://dev316614.service-now.com/sp_config?id=kb-article-content-word-count
+https://dev316614.service-now.com/sp?id=kb-article-content-word-count
+https://dev316614.service-now.com/esc?id=kb-article-content-word-count
