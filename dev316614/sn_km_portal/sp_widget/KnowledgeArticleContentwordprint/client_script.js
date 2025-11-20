@@ -80,32 +80,32 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
             '</div>';
 
         var metadataHeaderHTML =
-            '<div style="font-family: Arial, sans-serif; font-size: 11px; color:#000;">' +
-            '<table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin: 0 4px 6px 4px; font-size: 11px;">' +
+            '<div style="font-family: Arial, sans-serif; font-size: 11px; color:#000; padding: 0 4px; box-sizing: border-box;">' +
+            '<table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 11px; box-sizing: border-box;">' +
             '<tr style="height: 60px;">' +
-            '<td style="width: 18%; min-width: 150px; border: 1px solid #000; text-align: center; vertical-align: middle; padding: 8px 8px;">' +
+            '<td style="width: 18%; min-width: 150px; border: 1px solid #000; text-align: center; vertical-align: middle; padding: 8px 8px; box-sizing: border-box;">' +
             logoMarkup +
             '</td>' +
-            '<td colspan="3" style="border: 1px solid #000; text-align: center; padding: 5px 10px;">' +
+            '<td colspan="3" style="border: 1px solid #000; text-align: center; padding: 5px 10px; box-sizing: border-box;">' +
             '<div style="font-size: 11px; margin-bottom: 2px;">' + (policyType || '&nbsp;') + '</div>' +
             '<div style="font-size: 18px; font-weight: bold; margin-bottom: 2px; color:#003366;">' + (policyName || '&nbsp;') + '</div>' +
             '<div style="font-size: 11px;">' + (policyCategory || '&nbsp;') + '</div>' +
             '</td>' +
             '</tr>' +
             '<tr>' +
-            '<td style="border: 1px solid #000; padding: 6px; font-size: 11px;">' +
+            '<td style="border: 1px solid #000; padding: 6px; font-size: 11px; box-sizing: border-box;">' +
             '<div><strong>Dokument-ID:</strong> ' + (policyNumber || 'N/A') + '</div>' +
             '<div><strong>Versjon:</strong> ' + (policyArticleVersion || 'N/A') + '</div>' +
             '<div><strong>Status:</strong> ' + (policyState || 'N/A') + '</div>' +
             '</td>' +
-            '<td style="border: 1px solid #000; padding: 6px; font-size: 11px;">' +
+            '<td style="border: 1px solid #000; padding: 6px; font-size: 11px; box-sizing: border-box;">' +
             '<div><strong>Dokumentansvarlig:</strong> ' + (policyOwner || 'N/A') + '</div>' +
             '<div style="margin-top: 4px;"><strong>Utarbeidet av:</strong> ' + (policyOwner || 'N/A') + '</div>' +
             '</td>' +
-            '<td style="border: 1px solid #000; padding: 6px; font-size: 11px;">' +
+            '<td style="border: 1px solid #000; padding: 6px; font-size: 11px; box-sizing: border-box;">' +
             '<div><strong>Godkjent av:</strong> ' + (policyApprovers || 'N/A') + '</div>' +
             '</td>' +
-            '<td style="border: 1px solid #000; padding: 6px; font-size: 11px; width: 18%;">' +
+            '<td style="border: 1px solid #000; padding: 6px; font-size: 11px; width: 18%; box-sizing: border-box;">' +
             '<div><strong>Godkjent fra:</strong> ' + (policyValidFrom || 'N/A') + '</div>' +
             '</td>' +
             '</tr>' +
