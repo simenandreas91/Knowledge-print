@@ -64,7 +64,14 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         var policyGradingLabel = escapeHtml(policyDetails.grading_label || policyDetails.grading_level || '');
         var policyGradingDescription = escapeHtml(policyDetails.grading_description || '');
         var policyGradingColor = escapeHtml(policyDetails.grading_color || '#003366');
-        var policyValidFrom = escapeHtml(policyDetails.valid_from || '');
+        var policyValidFromRaw = policyDetails.valid_from || '';
+        var formatDateOnly = function(val) {
+            if (!val)
+                return '';
+            var match = String(val).match(/^\s*(\d{4})-(\d{2})-(\d{2})/);
+            return match ? (match[3] + '.' + match[2] + '.' + match[1]) : val;
+        };
+        var policyValidFrom = escapeHtml(formatDateOnly(policyValidFromRaw));
         var policyApprovers = escapeHtml(policyDetails.approvers || '');
         var policyOwner = escapeHtml(policyDetails.owner || '');
         var policyState = escapeHtml(policyDetails.state || '');
@@ -103,7 +110,6 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
             '</td>' +
             '<td style="border: 1px solid #000; padding: 6px; font-size: 11px; box-sizing: border-box;">' +
             '<div><strong>Dokumentansvarlig:</strong> ' + (policyOwner || 'N/A') + '</div>' +
-            '<div style="margin-top: 4px;"><strong>Utarbeidet av:</strong> ' + (policyOwner || 'N/A') + '</div>' +
             '</td>' +
             '<td style="border: 1px solid #000; padding: 6px; font-size: 11px; box-sizing: border-box;">' +
             '<div><strong>Godkjent av:</strong> ' + (policyApprovers || 'N/A') + '</div>' +
@@ -113,7 +119,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
             '</td>' +
             '</tr>' +
             '</table>' +
-            '<div style="display: flex; justify-content: flex-end; color:' + (policyGradingColor || '#003366') + '; font-size: 11px; margin: 0 4px 12px 4px;">' +
+            '<div style="display: flex; justify-content: flex-end; color:' + (policyGradingColor || '#003366') + '; font-size: 11px; margin: 6px 4px 12px 4px;">' +
             '<div style="text-align: right; line-height: 1.2;">' +
             '<div style="font-weight: 700; text-transform: uppercase;">' + (policyGradingLabel || '&nbsp;') + '</div>' +
             (policyGradingDescription ? '<div style="margin-top: 2px;">' + policyGradingDescription + '</div>' : '') +
