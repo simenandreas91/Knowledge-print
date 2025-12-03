@@ -439,6 +439,10 @@ function getPolicyDetails(articleSysId){
 		policyDetails.name = policyGR.getDisplayValue('name');
 		policyDetails.policy_category = policyGR.getDisplayValue('policy_category');
 		policyDetails.grading_level = policyGR.getDisplayValue('u_graderingsniv');
+		var gradingMeta = getGradingMeta(policyDetails.grading_level);
+		policyDetails.grading_label = gradingMeta.label;
+		policyDetails.grading_description = gradingMeta.description;
+		policyDetails.grading_color = gradingMeta.color;
 		policyDetails.valid_from = policyGR.getDisplayValue('valid_from');
 		policyDetails.approvers = policyGR.getDisplayValue('approvers');
 		policyDetails.owner = policyGR.getDisplayValue('owner');
@@ -450,6 +454,54 @@ function getPolicyDetails(articleSysId){
 	}
 
 	return policyDetails;
+}
+
+function getGradingMeta(gradingLevel){
+	var normalized = normalizeGrading(gradingLevel);
+	var meta = {
+		label: gradingLevel || '',
+		description: '',
+		color: '#003366'
+	};
+	var map = {
+		'unntatt offentlighet': {
+			label: 'Unntatt offentlighet',
+			description: 'iht. offentleglova § 21 jf. Forvaltningsloven § 13',
+			color: '#0056b3'
+		},
+		'kan offentliggjores': {
+			label: 'Kan offentliggjøres',
+			description: 'iht. Direktiv for sikkerhetstjeneste pkt. 4.2',
+			color: '#0f7c0f'
+		},
+		'tjenstlig': {
+			label: 'Tjenstlig',
+			description: 'iht. Direktiv for sikkerhetstjeneste pkt. 4.2',
+			color: '#0f7c0f'
+		},
+		'avskjermet': {
+			label: 'Avskjermet',
+			description: 'iht. Direktiv for sikkerhetstjeneste pkt. 4.2',
+			color: '#0f7c0f'
+		},
+		'begrenset': {
+			label: 'Begrenset',
+			description: 'iht. sikkerhetsloven §§ 5-3 og 5-4 jf. offentleglova § 13',
+			color: '#b30000'
+		}
+	};
+	if(map[normalized])
+		meta = map[normalized];
+	return meta;
+}
+
+function normalizeGrading(value){
+	if(!value)
+		return '';
+	var str = (value + '').toLowerCase().trim();
+	// strip Norwegian characters to aid matching
+	str = str.replace(/æ/g, 'ae').replace(/ø/g, 'o').replace(/å/g, 'a');
+	return str;
 }
 
 function getLogoDataUrl(kbRecord){

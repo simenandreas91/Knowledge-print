@@ -61,6 +61,9 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         var policyName = escapeHtml(policyDetails.name || '');
         var policyCategory = escapeHtml(policyDetails.policy_category || '');
         var policyGradingLevel = escapeHtml(policyDetails.grading_level || '');
+        var policyGradingLabel = escapeHtml(policyDetails.grading_label || policyDetails.grading_level || '');
+        var policyGradingDescription = escapeHtml(policyDetails.grading_description || '');
+        var policyGradingColor = escapeHtml(policyDetails.grading_color || '#003366');
         var policyValidFrom = escapeHtml(policyDetails.valid_from || '');
         var policyApprovers = escapeHtml(policyDetails.approvers || '');
         var policyOwner = escapeHtml(policyDetails.owner || '');
@@ -110,8 +113,11 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
             '</td>' +
             '</tr>' +
             '</table>' +
-            '<div style="display: flex; justify-content: flex-end; color:#003366; font-size: 11px; margin: 0 4px 12px 4px;">' +
-            '<span>Graderingsniv&aring;: ' + (policyGradingLevel || '&nbsp;') + '</span>' +
+            '<div style="display: flex; justify-content: flex-end; color:' + (policyGradingColor || '#003366') + '; font-size: 11px; margin: 0 4px 12px 4px;">' +
+            '<div style="text-align: right; line-height: 1.2;">' +
+            '<div style="font-weight: 700; text-transform: uppercase;">' + (policyGradingLabel || '&nbsp;') + '</div>' +
+            (policyGradingDescription ? '<div style="margin-top: 2px;">' + policyGradingDescription + '</div>' : '') +
+            '</div>' +
             '</div>' +
             '</div>';
 
