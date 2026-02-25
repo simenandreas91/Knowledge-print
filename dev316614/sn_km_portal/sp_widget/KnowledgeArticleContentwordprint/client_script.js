@@ -61,7 +61,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         }
     }
 
-    c.printArticle = function(myID) {
+    c.printArticle = function (myID) {
         // Keep a copy of the current DOM so we can restore it later
         var originalHTML = document.body.innerHTML;
 
@@ -73,10 +73,10 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
             return;
         }
 
-        var escapeHtml = function(value) {
+        var escapeHtml = function (value) {
             if (value === undefined || value === null)
                 return '';
-            return String(value).replace(/[&<>"']/g, function(char) {
+            return String(value).replace(/[&<>"']/g, function (char) {
                 return {
                     '&': '&amp;',
                     '<': '&lt;',
@@ -98,7 +98,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         var policyGradingDescription = escapeHtml(policyDetails.grading_description || '');
         var policyGradingColor = escapeHtml(policyDetails.grading_color || '#003366');
         var policyValidFromRaw = policyDetails.valid_from || '';
-        var formatDateOnly = function(val) {
+        var formatDateOnly = function (val) {
             if (!val)
                 return '';
             var match = String(val).match(/^\s*(\d{4})-(\d{2})-(\d{2})/);
@@ -116,11 +116,11 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         // Give the logo more space so the full text mark stays visible when printed
         var logoMarkup =
             '<div style="display:flex; justify-content:center; align-items:center; width:100%; padding:8px 6px;">' +
-                '<img src="' + logoSrc + '" alt="FFI logo" style="width:220px; max-width:100%; height:auto; display:block;" />' +
+            '<img src="' + logoSrc + '" alt="FFI logo" style="width:220px; max-width:100%; height:auto; display:block;" />' +
             '</div>';
 
         var metadataHeaderHTML =
-            '<style>@media print { .km-print-color { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; } }</style>' +
+            '<style>@page { margin-bottom: 0cm; } @media print { .km-print-color { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; } a[href]:after { content: none !important; } }</style>' +
             '<div class="km-print-color" style="font-family: Arial, sans-serif; font-size: 11px; color:#000; padding: 0 4px; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; color-adjust: exact;">' +
             '<table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 11px; box-sizing: border-box;">' +
             '<tr style="height: 60px;">' +
@@ -156,6 +156,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
             (policyGradingDescription ? '<div style="margin-top: 2px;">' + policyGradingDescription + '</div>' : '') +
             '</div>' +
             '</div>' +
+            '<div style="text-align: center; font-style: italic; font-size: 11px; margin-bottom: 16px; color: #000;">Vær oppmerksom på at dokumentet kan være endret etter utskrift</div>' +
             '</div>';
 
         // Build the printable document: metadata header + article content
@@ -163,13 +164,13 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
 
         // Remove elements you don’t want in the PDF
         document.querySelectorAll('.title-secondary-data, .transparent-button')
-            .forEach(function(el) {
+            .forEach(function (el) {
                 el.parentNode && el.parentNode.removeChild(el);
             });
 
         // Wait for images (logo/attachments) to load before printing
         var printed = false;
-        var restoreAndReload = function() {
+        var restoreAndReload = function () {
             if (printed)
                 return;
             printed = true;
@@ -183,12 +184,12 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
             restoreAndReload();
         } else {
             var remaining = imgs.length;
-            var done = function() {
+            var done = function () {
                 remaining--;
                 if (remaining <= 0)
                     restoreAndReload();
             };
-            imgs.forEach(function(img) {
+            imgs.forEach(function (img) {
                 if (img.complete && img.naturalWidth !== 0) {
                     done();
                 } else {
@@ -220,7 +221,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         }
     }
 
-    $window.onpopstate = function(e) {
+    $window.onpopstate = function (e) {
         if (e && e.state && e.state.addSPA) {
             $location.search('spa', null);
             $location.replace();
@@ -230,7 +231,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
     if (c.data.isValid) {
         if (c.data.kbContentData && c.data.kbContentData.isTemplate) {
             //alert(c.data.kbContentData.data);
-            c.data.kbContentData.data.forEach(function(field) {
+            c.data.kbContentData.data.forEach(function (field) {
                 if (field.type == 'html')
                     field.content = $sce.trustAsHtml(field.content);
                 //alert(field.content);
@@ -252,7 +253,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
 
     $scope.submitted = false;
     c.flagMessage = null;
-    $timeout(function() {
+    $timeout(function () {
         $rootScope.$broadcast("sp.update.breadcrumbs", $scope.data.breadCrumb);
     });
     $rootScope.properties = $scope.data.properties;
@@ -353,11 +354,11 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
     }
 
     c.showVersions = false;
-    c.toggleVersions = function() {
+    c.toggleVersions = function () {
         c.showVersions = !c.showVersions;
     };
 
-    c.selectLanguage = function(ind) {
+    c.selectLanguage = function (ind) {
         var viewAsUser = "";
 
         if (c.data.params.view_as_user.length > 0)
@@ -366,7 +367,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         $window.location.replace('?id=' + c.data.params.sysparm_article_view_page_id + '&sys_kb_id=' + c.data.langList[ind].sys_id + viewAsUser);
     };
 
-    c.showActionMenu = function() {
+    c.showActionMenu = function () {
         if (c.showMenu) {
             return true;
         } else {
@@ -377,12 +378,12 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         }
     }
 
-    c.toggleSection = function(field) {
+    c.toggleSection = function (field) {
         field.collapsed = !field.collapsed;
         $('#' + field.column).slideToggle("fast");
     };
 
-    c.handleSubscribeButtonFocus = function() {
+    c.handleSubscribeButtonFocus = function () {
         if ($scope.data.isSubscribed) {
             $scope.data.subscribeLabel = $rootScope.messages.UNSUBSCRIBE;
             $scope.data.toggleSubscribed = !$scope.data.toggleSubscribed;
@@ -390,17 +391,17 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
 
     };
 
-    c.handleSubscribeButtonBlur = function() {
+    c.handleSubscribeButtonBlur = function () {
         if ($scope.data.isSubscribed) {
             $scope.data.subscribeLabel = $rootScope.messages.SUBSCRIBED;
             $scope.data.toggleSubscribed = !$scope.data.toggleSubscribed;
         }
     }
-    c.closeUnsubscribeModal = function() {
+    c.closeUnsubscribeModal = function () {
         $("#unSubscribeModal").modal('hide');
     };
 
-    c.handleSubscription = function(confirmation) {
+    c.handleSubscription = function (confirmation) {
         c.data.actionName = null;
         if (!$scope.data.isSubscribed) {
             c.data.actionName = 'subscribe';
@@ -425,9 +426,9 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
                         primary: true
                     }],
                     message: unsubscribeMessage
-                }).then(function() {
+                }).then(function () {
                     c.handleSubscription('Y');
-                }, function() {
+                }, function () {
                     c.closeUnsubscribeModal();
                 });
 
@@ -451,7 +452,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
             unsubscribeKB: c.data.unsubscribeKB,
             isArticleSubscribed: c.data.isArticleSubscribed,
             isKBSubscribed: c.data.isArticleSubscribedAtKB
-        }).then(function(resp) {
+        }).then(function (resp) {
             if (c.data.actionName == 'subscribe') {
                 $scope.data.isArticleSubscribed = true;
                 $scope.data.isSubscribed = true;
@@ -469,7 +470,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
 
 
 
-    c.submitFlagComments = function() {
+    c.submitFlagComments = function () {
         if (!c.data.comment) {
             c.flagMessage = "${Please provide a comment to flag the article}";
             $("#flagComment").focus();
@@ -480,7 +481,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
                 action: 'saveFlagComment',
                 article_sys_id: c.data.article_sys_id,
                 comment: c.data.comment
-            }).then(function(resp) {
+            }).then(function (resp) {
                 if (resp.data.feedbackSuccess)
                     c.showUIMessage('info', c.data.messages.ARTICLE_FLAGGED);
                 else
@@ -492,7 +493,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
 
     };
 
-    c.copyPermalink = function() {
+    c.copyPermalink = function () {
         var v = document.createElement('textarea');
         var permalink = document.location.origin + document.location.pathname + '?id=' + c.data.params.sysparm_article_view_page_id + '&sysparm_article=' + $scope.data.number;
         v.innerHTML = permalink;
@@ -515,7 +516,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         $('p.kb-permalink button').focus();
     };
     var modal = null;
-    c.launchFlagModal = function(e) {
+    c.launchFlagModal = function (e) {
         c.clearComment();
         var pageRoot = angular.element('.sp-page-root');
         modal = $uibModal.open({
@@ -523,8 +524,8 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
             scope: $scope,
             templateUrl: 'kb-flag-article-modal',
             keyboard: true,
-            controller: function($scope) {
-                $scope.$on('modal.closing', function() {
+            controller: function ($scope) {
+                $scope.$on('modal.closing', function () {
                     pageRoot.attr('aria-hidden', 'false');
                     // Toggle dropdown if not already visible:
                     if ($('.dropdown').find('.moreActionsMenuList').is(":hidden") && !$("#submitFlagComment").attr("disabled")) {
@@ -535,7 +536,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
                 });
             }
         });
-        modal.rendered.then(function() {
+        modal.rendered.then(function () {
             //hide the root page headings when modal is active
             pageRoot.attr('aria-hidden', 'true');
             $("#flagComment").focus();
@@ -544,7 +545,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         e.stopPropagation();
     }
 
-    var taskPopUp = $rootScope.$on("sp.kb.feedback.openTaskPopup", function(event, data) {
+    var taskPopUp = $rootScope.$on("sp.kb.feedback.openTaskPopup", function (event, data) {
         c.ftask = {};
         if (data) {
             c.launchFeedbackTaskModal();
@@ -555,7 +556,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         }
     });
 
-    c.launchFeedbackTaskModal = function() {
+    c.launchFeedbackTaskModal = function () {
         var pageRoot = angular.element('.sp-page-root');
         c.clearFeedbackTask();
         modal = $uibModal.open({
@@ -564,8 +565,8 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
             scope: $scope,
             templateUrl: 'kb-feedback-task-modal',
             keyboard: true,
-            controller: function($scope) {
-                $scope.$on("modal.closing", function() {
+            controller: function ($scope) {
+                $scope.$on("modal.closing", function () {
                     pageRoot.attr('aria-hidden', 'false');
                     $('#useful_no').focus();
 
@@ -583,7 +584,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
                         details: c.data.details,
                         feedback_action: c.ftask.feedback_action,
                         rating: c.ftask.feedback_rating
-                    }).then(function(resp) {
+                    }).then(function (resp) {
                         if (resp.data.responseMessage) {
                             if (resp.data.feedbackSuccess) {
                                 c.showUIMessage('info', resp.data.responseMessage);
@@ -597,7 +598,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
                 });
             }
         });
-        modal.rendered.then(function() {
+        modal.rendered.then(function () {
             //hide the root page headings when modal is active
             pageRoot.attr('aria-hidden', 'true');
             $('.type-multiple_choice input[aria-checked="true"]').focus();
@@ -605,7 +606,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
 
     }
 
-    c.clearComment = function(e) {
+    c.clearComment = function (e) {
         if (e) {
             e.stopPropagation();
             e.preventDefault();
@@ -615,7 +616,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         c.closePopup();
     }
 
-    c.closeTaskPopup = function(e) {
+    c.closeTaskPopup = function (e) {
         if (e) {
             e.stopPropagation();
             e.preventDefault();
@@ -626,10 +627,10 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         $('#useful_no').focus();
     }
 
-    c.selectReason = function(e, elem) {
+    c.selectReason = function (e, elem) {
         // space keycode to select the radio button
         if (e.keyCode == 32) {
-            $("div.type-multiple_choice").find("input[type=radio]").each(function() {
+            $("div.type-multiple_choice").find("input[type=radio]").each(function () {
                 $(this).attr("checked", false);
                 $(this).attr("aria-checked", false);
                 $(this).find("input[type=radio]").attr("checked", false);
@@ -641,7 +642,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
 
     }
 
-    c.showUIMessage = function(type, msg) {
+    c.showUIMessage = function (type, msg) {
         if (cabrillo.isNative()) {
             cabrillo.message.showMessage(type != 'error' ? cabrillo.message.SUCCESS_MESSAGE_STYLE : cabrillo.message.ERROR_MESSAGE_STYLE, msg);
         } else {
@@ -652,13 +653,13 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         }
     }
 
-    c.closePopup = function() {
+    c.closePopup = function () {
         if (modal) {
             modal.dismiss();
         }
     }
 
-    c.clearFeedbackTask = function() {
+    c.clearFeedbackTask = function () {
         c.submitted = false;
         c.data.reason = '4';
         c.data.details = '';
@@ -667,7 +668,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         c.closePopup();
     }
 
-    c.submitFeedbackTask = function() {
+    c.submitFeedbackTask = function () {
         if (!c.data.reason) {
             c.flagMessage = "${Please provide the mandatory details}";
             $("#detailsComment").focus();
@@ -678,11 +679,11 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         }
     }
 
-    c.imgModalClose = function() {
+    c.imgModalClose = function () {
         c.imageInstance.close();
     }
 
-    c.getLabelForTemplateField = function(label, isCollapsed) {
+    c.getLabelForTemplateField = function (label, isCollapsed) {
         if (isCollapsed)
             return label + " " + c.data.messages.COLLAPSED_FIELD;
         else
@@ -691,23 +692,23 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
 
     $scope.$on("$destroy", taskPopUp);
 
-    $("#flagComment").keydown(function(ev) {
+    $("#flagComment").keydown(function (ev) {
         if (ev.which == 13)
             $("#flagComment").click();
     });
 
-    c.handleKeyDown = function(ev) {
+    c.handleKeyDown = function (ev) {
         if (ev.which == 13)
             $(ev.target).click();
     }
 
-    var favoriteEvent = $rootScope.$on('favorite', function(e, favorite) {
+    var favoriteEvent = $rootScope.$on('favorite', function (e, favorite) {
         $scope.showFavorite = favorite.showFavorite;
         $scope.isFavorite = favorite.isFavorite;
     });
     $scope.$on("$destroy", favoriteEvent);
 
-    $scope.toggleFavorite = function($event) {
+    $scope.toggleFavorite = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.$broadcast('toggleFavorite');
