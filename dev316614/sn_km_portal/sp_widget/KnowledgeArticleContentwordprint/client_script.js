@@ -276,7 +276,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
     c.createIncidentLabel = c.options.create_task_prompt || $scope.data.messages.CREATE_INCIDENT;
     c.showCreateIncident = c.data.isLoggedInUser && c.options.show_create_incident_action != 'false' && c.data.properties && c.data.properties.showKBCreateIncident && c.createIncidentURL;
     c.showFlagArticle = c.data.properties && c.data.properties.showKBFlagArticle && c.data.properties.showRatingOptions;
-    c.showMenu = c.data.properties && (c.showFlagArticle || c.data.properties.isEditable || c.showCreateIncident);
+    c.showMenu = !!c.data.properties;
     $rootScope.stackUrl = window.location.pathname + '?id=' + c.data.params.sysparm_article_view_page_id + '%26' + (c.data.params.sysparm_article ? 'sysparm_article=' + c.data.params.sysparm_article : 'sys_kb_id=' + c.data.params.sys_kb_id);
     c.stackUrl = $rootScope.stackUrl;
     c.flagMessage = '';
