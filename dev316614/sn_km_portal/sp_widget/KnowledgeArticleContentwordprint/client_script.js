@@ -156,7 +156,7 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
             (policyGradingDescription ? '<div style="margin-top: 2px;">' + policyGradingDescription + '</div>' : '') +
             '</div>' +
             '</div>' +
-            '<div style="text-align: center; font-style: italic; font-size: 11px; margin-bottom: 16px; color: #000;">Vær oppmerksom på at dokumentet kan være endret etter utskrift</div>' +
+            '<div style="text-align: center; font-style: italic; font-size: 11px; margin-top: 20px; margin-bottom: 16px; color: #000;">Vær oppmerksom på at dokumentet kan være endret etter utskrift</div>' +
             '</div>';
 
         // Build the printable document: metadata header + article content
