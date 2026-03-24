@@ -593,6 +593,7 @@ function populateDataForCrawler(){
 	data.logoDataUrl = getLogoDataUrl(knowledgeRecord);
 	data.displayAttachments = knowledgeRecord.display_attachments + '';
 	data.kbSysId = knowledgeRecord.kb_knowledge_base.sys_id + '';
+	data.revisionString = getRevisionString(knowledgeRecord);
 	data.hasComments = false;
 	data.tableName = knowledgeRecord.sys_class_name + '';
 }
@@ -620,7 +621,7 @@ function populateDataFromKBViewModel(){
 	data.displayAttachments = knowledgeRecord.display_attachments + '';
 	data.tableName = knowledgeRecord.sys_class_name + '';
 	data.disableSuggesting = knowledgeRecord.disable_suggesting;
-	data.revisionString = kbViewModel.revisionString;
+	data.revisionString = getRevisionString(knowledgeRecord, kbViewModel.revisionString);
 	data.articleTemplate = kbViewModel.articleTemplateName;
 	data.isSubscriptionEnabled = kbViewModel.isSubscriptionEnabled;
 	data.helpfulContent = kbViewModel.helpfulText;
@@ -641,6 +642,45 @@ function populateDataFromKBViewModel(){
 	data.kbDocSysId = kbViewModel.kbDocSysId;
 	data.wordOnlineUrl = kbViewModel.wordOnlineUrl;
 
+}
+
+function getRevisionString(record, fallbackRevisionString){
+	if(!record)
+		return fallbackRevisionString || '';
+
+	var authorDisplay = record.getDisplayValue('author');
+	if(gs.nil(authorDisplay))
+		return fallbackRevisionString || '';
+
+	var revisionLabel = shouldUseApprovedByLabel(record) ? gs.getMessage('Approved by') : gs.getMessage('Authored by');
+	return revisionLabel + ' ' + authorDisplay;
+}
+
+function shouldUseApprovedByLabel(record){
+	if(!record)
+		return false;
+
+	var knowledgeBaseId = record.getValue('kb_knowledge_base');
+	if(gs.nil(knowledgeBaseId))
+		return false;
+
+	var configuredKnowledgeBases = getConfiguredKnowledgeBaseIds(options.approved_by_knowledge_bases);
+	return configuredKnowledgeBases.indexOf(knowledgeBaseId + '') > -1;
+}
+
+function getConfiguredKnowledgeBaseIds(optionValue){
+	var knowledgeBaseIds = [];
+	if(gs.nil(optionValue))
+		return knowledgeBaseIds;
+
+	var rawIds = (optionValue + '').split(',');
+	for(var i = 0; i < rawIds.length; i++){
+		var knowledgeBaseId = (rawIds[i] + '').replace(/^\s+|\s+$/g, '');
+		if(knowledgeBaseId)
+			knowledgeBaseIds.push(knowledgeBaseId);
+	}
+
+	return knowledgeBaseIds;
 }
 
 function populateBreadCrumbs(){

@@ -46,6 +46,19 @@
     "type": "boolean"
   },
   {
+    "displayValue": "Knowledge Bases",
+    "display_value_list": [],
+    "hint": "Knowledge bases that should display Approved by instead of Authored by",
+    "name": "approved_by_knowledge_bases",
+    "section": "other",
+    "label": "Kunnskapsbaser som holder Styrende dokumenter",
+    "type": "glide_list",
+    "value": "kb_knowledge_base",
+    "ed": {
+      "reference": "kb_knowledge_base"
+    }
+  },
+  {
     "hint": "If the instance option is set to true, the page title is set dynamically from the widget. It will also override any existing title set on the page.",
     "name": "set_page_title",
     "section": "other",
