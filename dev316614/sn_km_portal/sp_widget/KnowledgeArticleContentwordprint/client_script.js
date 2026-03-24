@@ -1,4 +1,4 @@
-function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal, $location, cabrillo, snAnalytics) {
+api.controller = function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal, $location, cabrillo, snAnalytics) {
     /* widget controller */
     var c = this;
     // Fallback inline logo for FFI text mark (Forsvarets forskningsinstitutt)
@@ -714,4 +714,4 @@ function($rootScope, $scope, $window, $timeout, spUtil, $sce, spModal, $uibModal
         $scope.$broadcast('toggleFavorite');
     }
 
-}
+};
