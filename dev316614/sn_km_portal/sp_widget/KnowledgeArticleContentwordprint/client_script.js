@@ -119,8 +119,30 @@ api.controller = function($rootScope, $scope, $window, $timeout, spUtil, $sce, s
             '<img src="' + logoSrc + '" alt="FFI logo" style="width:220px; max-width:100%; height:auto; display:block;" />' +
             '</div>';
 
+        var printStylesHTML =
+            '<style>' +
+            '@page {' +
+            ' margin: 10mm 10mm 14mm 10mm;' +
+            ' @bottom-center {' +
+            '  content: "Side " counter(page) " av " counter(pages);' +
+            '  font-family: Arial, sans-serif;' +
+            '  font-size: 10px;' +
+            '  color: #666;' +
+            ' }' +
+            '}' +
+            '@media print {' +
+            ' body { margin: 0 !important; }' +
+            ' .km-print-color {' +
+            '  -webkit-print-color-adjust: exact !important;' +
+            '  print-color-adjust: exact !important;' +
+            '  color-adjust: exact !important;' +
+            ' }' +
+            ' a[href]:after { content: none !important; }' +
+            '}' +
+            '</style>';
+
         var metadataHeaderHTML =
-            '<style>@page { margin-bottom: 0cm; } @media print { .km-print-color { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; } a[href]:after { content: none !important; } }</style>' +
+            printStylesHTML +
             '<div class="km-print-color" style="font-family: Arial, sans-serif; font-size: 11px; color:#000; padding: 0 4px; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; color-adjust: exact;">' +
             '<table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 11px; box-sizing: border-box;">' +
             '<tr style="height: 60px;">' +
@@ -220,6 +242,23 @@ api.controller = function($rootScope, $scope, $window, $timeout, spUtil, $sce, s
             $window.document.title = c.data.page_title;
         }
     }
+
+    c.getDisplayDate = function (timestamp) {
+        if (!timestamp)
+            return '';
+
+        var match = String(timestamp).match(/^\s*(\d{4})-(\d{2})-(\d{2})/);
+        if (match)
+            return match[3] + '.' + match[2] + '.' + match[1];
+
+        var parsedDate = new Date(timestamp);
+        if (isNaN(parsedDate.getTime()))
+            return timestamp;
+
+        var day = ('0' + parsedDate.getDate()).slice(-2);
+        var month = ('0' + (parsedDate.getMonth() + 1)).slice(-2);
+        return day + '.' + month + '.' + parsedDate.getFullYear();
+    };
 
     $window.onpopstate = function (e) {
         if (e && e.state && e.state.addSPA) {

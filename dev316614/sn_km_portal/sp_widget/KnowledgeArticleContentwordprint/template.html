@@ -136,7 +136,7 @@
             <span class="sr-only">This article was updated</span>
             <span class="pad-right hidden-xs" ng-if="!c.isMobile" aria-hidden="true">&#8226;</span> <i
               class="fa fa-calendar pad-right" aria-hidden="true" />
-            <sn-time-ago timestamp="data.sys_updated_on" />
+            <span title="{{data.sys_updated_on}}">{{c.getDisplayDate(data.sys_updated_on)}}</span>
           </div>
           <span ng-if="data.viewCount == 1" class="views pad-right text-nowrap">
             <span class="sr-only">This article has {{::data.viewCount}} view.</span>
