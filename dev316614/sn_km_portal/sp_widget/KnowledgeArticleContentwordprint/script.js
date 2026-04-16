@@ -428,32 +428,96 @@ function getPolicyDetails(articleSysId){
 	if(gs.nil(articleSysId))
 		return policyDetails;
 
+	var documentVersionGR = getDocumentVersionRecord(articleSysId);
+	var policyGR = getPolicyRecord(documentVersionGR, articleSysId);
+
+	if(documentVersionGR){
+		// Use the version table as the primary source so print metadata follows the approved KB version.
+		policyDetails.type = getDocumentType(documentVersionGR);
+		policyDetails.name = documentVersionGR.getDisplayValue('name');
+		policyDetails.valid_from = documentVersionGR.getDisplayValue('valid_from');
+		policyDetails.valid_to = documentVersionGR.getDisplayValue('valid_to');
+		policyDetails.approved_on = documentVersionGR.getDisplayValue('approved_on');
+		policyDetails.approvers = documentVersionGR.getDisplayValue('approvers');
+		policyDetails.reviewers = documentVersionGR.getDisplayValue('reviewers');
+		policyDetails.owner = documentVersionGR.getDisplayValue('owner');
+	}
+
+	if(policyGR){
+		policyDetails.number = policyGR.getDisplayValue('number');
+		if(gs.nil(policyDetails.type))
+			policyDetails.type = policyGR.getDisplayValue('type');
+		if(gs.nil(policyDetails.name))
+			policyDetails.name = policyGR.getDisplayValue('name');
+		policyDetails.policy_category = policyGR.getDisplayValue('policy_category');
+		policyDetails.grading_level = policyGR.getDisplayValue('u_graderingsniv');
+		policyDetails.state = policyGR.getDisplayValue('state');
+	}
+
+	if(knowledgeRecord){
+		if(gs.nil(policyDetails.number))
+			policyDetails.number = knowledgeRecord.getDisplayValue('number');
+		if(gs.nil(policyDetails.name))
+			policyDetails.name = knowledgeRecord.getDisplayValue('short_description');
+		policyDetails.state = knowledgeRecord.getDisplayValue('workflow_state');
+		policyDetails.article_version = knowledgeRecord.getDisplayValue('version');
+	}
+
+	if(gs.nil(policyDetails.article_version) && documentVersionGR)
+		policyDetails.article_version = documentVersionGR.getDisplayValue('kb_article.version');
+
+	if(gs.nil(policyDetails.valid_from))
+		policyDetails.valid_from = policyDetails.approved_on || '';
+
+	var gradingMeta = getGradingMeta(policyDetails.grading_level);
+	policyDetails.grading_label = gradingMeta.label;
+	policyDetails.grading_description = gradingMeta.description;
+	policyDetails.grading_color = gradingMeta.color;
+
+	return policyDetails;
+}
+
+function getDocumentVersionRecord(articleSysId){
+	var documentVersionGR = new GlideRecord('sn_irm_shared_cmn_document_version');
+	documentVersionGR.addQuery('kb_article', articleSysId);
+	documentVersionGR.addQuery('table_name', 'sn_compliance_policy');
+	documentVersionGR.orderByDesc('approved_on');
+	documentVersionGR.orderByDesc('sys_created_on');
+	documentVersionGR.setLimit(1);
+	documentVersionGR.query();
+	if(documentVersionGR.next())
+		return documentVersionGR;
+	return null;
+}
+
+function getPolicyRecord(documentVersionGR, articleSysId){
 	var policyGR = new GlideRecord('sn_compliance_policy');
+
+	if(documentVersionGR && !gs.nil(documentVersionGR.getValue('record_id'))){
+		if(policyGR.get(documentVersionGR.getValue('record_id')))
+			return policyGR;
+	}
+
 	policyGR.addQuery('kb_article', articleSysId);
 	policyGR.setLimit(1);
 	policyGR.query();
+	if(policyGR.next())
+		return policyGR;
+	return null;
+}
 
-	if(policyGR.next()){
-		policyDetails.number = policyGR.getDisplayValue('number');
-		policyDetails.type = policyGR.getDisplayValue('type');
-		policyDetails.name = policyGR.getDisplayValue('name');
-		policyDetails.policy_category = policyGR.getDisplayValue('policy_category');
-		policyDetails.grading_level = policyGR.getDisplayValue('u_graderingsniv');
-		var gradingMeta = getGradingMeta(policyDetails.grading_level);
-		policyDetails.grading_label = gradingMeta.label;
-		policyDetails.grading_description = gradingMeta.description;
-		policyDetails.grading_color = gradingMeta.color;
-		policyDetails.valid_from = policyGR.getDisplayValue('valid_from');
-		policyDetails.approvers = policyGR.getDisplayValue('approvers');
-		policyDetails.owner = policyGR.getDisplayValue('owner');
-		policyDetails.state = policyGR.getDisplayValue('state');
-		var articleVersion = policyGR.getDisplayValue('kb_article.version');
-		if(gs.nil(articleVersion) && knowledgeRecord)
-			articleVersion = knowledgeRecord.getDisplayValue('version');
-		policyDetails.article_version = articleVersion;
-	}
+function getDocumentType(documentVersionGR){
+	if(!documentVersionGR)
+		return '';
 
-	return policyDetails;
+	var displayValue = documentVersionGR.getDisplayValue('table_name') || '';
+	var rawValue = documentVersionGR.getValue('table_name') || '';
+	if(displayValue === rawValue && rawValue.indexOf('_') > -1)
+		return '';
+	var bracketIndex = displayValue.indexOf('[');
+	if(bracketIndex > 0)
+		return displayValue.substring(0, bracketIndex).trim();
+	return displayValue || rawValue;
 }
 
 function getGradingMeta(gradingLevel){
