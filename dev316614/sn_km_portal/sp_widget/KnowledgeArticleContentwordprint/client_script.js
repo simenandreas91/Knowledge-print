@@ -89,7 +89,7 @@ api.controller = function($rootScope, $scope, $window, $timeout, spUtil, $sce, s
 
         var articleHTML = articleElement.innerHTML;
         var policyDetails = c.data.policyInfo || {};
-        var policyNumber = escapeHtml(policyDetails.number || '');
+        var policyNumber = escapeHtml(c.data.number || policyDetails.number || '');
         var policyType = escapeHtml(policyDetails.type || '');
         var policyName = escapeHtml(policyDetails.name || '');
         var policyCategory = escapeHtml(policyDetails.policy_category || '');
@@ -97,14 +97,8 @@ api.controller = function($rootScope, $scope, $window, $timeout, spUtil, $sce, s
         var policyGradingLabel = escapeHtml(policyDetails.grading_label || policyDetails.grading_level || '');
         var policyGradingDescription = escapeHtml(policyDetails.grading_description || '');
         var policyGradingColor = escapeHtml(policyDetails.grading_color || '#003366');
-        var policyValidFromRaw = policyDetails.valid_from || '';
-        var formatDateOnly = function (val) {
-            if (!val)
-                return '';
-            var match = String(val).match(/^\s*(\d{4})-(\d{2})-(\d{2})/);
-            return match ? (match[3] + '.' + match[2] + '.' + match[1]) : val;
-        };
-        var policyValidFrom = escapeHtml(formatDateOnly(policyValidFromRaw));
+        var policyValidFromRaw = c.data.sys_updated_on || policyDetails.valid_from || '';
+        var policyValidFrom = escapeHtml(c.getDisplayDate(policyValidFromRaw));
         var policyApprovers = escapeHtml(policyDetails.approvers || '');
         var policyOwner = escapeHtml(policyDetails.owner || '');
         var policyState = escapeHtml(policyDetails.state || '');
